@@ -14,11 +14,10 @@
             "dynamodb:DeleteItem",
             "ssm:PutParameter",
             "ssm:GetParameter",
-            "kms:Decrypt",
-            "dynamodb:GetShardIterator",
-            "dynamodb:DescribeStream",
-            "dynamodb:ListStreams",
-            "dynamodb:GetRecords"
+            "sqs:ReceiveMessage",
+            "sqs:DeleteMessage",
+            "sqs:GetQueueAttributes",
+            "kms:Decrypt"
           ],
           "Effect": "Allow",
           "Resource": "*"
@@ -29,24 +28,23 @@
     "resource_type": "iam_policy",
     "tags": {}
   },
-  "Configuration": {
-    "resource_type": "dynamodb_table",
-    "hash_key_name": "key",
-    "hash_key_type": "S",
-    "read_capacity": 1,
-    "write_capacity": 1,
-    "global_indexes": [],
-    "autoscaling": [],
+  "async_queue": {
+    "resource_type": "sqs_queue",
+    "fifo_queue": false,
+    "visibility_timeout": 300,
+    "delay_seconds": 0,
+    "maximum_message_size": 1024,
+    "message_retention_period": 60,
+    "receive_message_wait_time_seconds": 0,
+    "policy": {},
+    "redrive_policy": {},
+    "content_based_deduplication": false,
     "tags": {}
   },
-  "${target_table}": {
-    "resource_type": "dynamodb_table",
-    "hash_key_name": "id",
-    "hash_key_type": "S",
-    "read_capacity": 1,
-    "write_capacity": 1,
-    "global_indexes": [],
-    "autoscaling": [],
+  "lambda_topic": {
+    "resource_type": "sns_topic",
+    "region": "eu-west-1",
+    "event_sources": [],
     "tags": {}
   }
 }
